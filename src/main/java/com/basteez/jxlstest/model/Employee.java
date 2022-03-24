@@ -25,4 +25,7 @@ public class Employee extends PanacheEntityBase {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(nullable = false)
     public LocalDateTime employmentDate;
+
+    @Column
+    public boolean isEmployeeOfTheMonth;
 }

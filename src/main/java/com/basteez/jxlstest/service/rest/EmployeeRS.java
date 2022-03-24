@@ -45,22 +45,23 @@ public class EmployeeRS {
     public Response exportEmployees(){
         logger.info("Export started");
         List<Employee> employeeList = getEmployees();
-        try(InputStream is = EmployeeRS.class.getResourceAsStream("/template.xls")){
-            try(ByteArrayOutputStream os = new ByteArrayOutputStream()){
-                Context context = new Context();
-                context.putVar("employees", employeeList);
-                JxlsHelper.getInstance().processTemplate(is, os, context);
+        try(InputStream is = EmployeeRS.class.getResourceAsStream("/template.xls")){ //1
+            try(ByteArrayOutputStream os = new ByteArrayOutputStream()){ //2
+                Context context = new Context(); //3
+                context.putVar("employees", employeeList); //4
+                JxlsHelper.getInstance().processTemplate(is, os, context); //5
 
                 Response resp = Response.ok()
-//                        .type("application/vnd.ms-excel")
-                        .type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                        .header("Content-Disposition", "filename=\"export.xls\"").entity(os.toByteArray()).build();
+                        .type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") //6
+                        .header("Content-Disposition", "filename=\"export.xls\"") //7
+                        .entity(os.toByteArray()) //8
+                        .build();
 
                 return resp;
             }
         }catch(Exception e){
             logger.errorv(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 }
